@@ -19,3 +19,4 @@ You are building a dashboard using a sample sales data.
 1. Set up a local server or upload the repository to your i-school server space.
 2. Work on index.html, main.js and main.css
 3. Follow the specific instructions outlined in the presentation slides, index.html and main.js.
+4. For advanced chart drill down refer http://www.highcharts.com/docs/chart-concepts/drilldown
