@@ -29,7 +29,7 @@ $('#list-usePref li').click(function(){
         renderTo: "line-chart"
       },
       title: {
-              text: 'Monthly Average Sales',
+              text: 'Monthly Sales',
               x: -20 //center
               },
       xAxis: {
