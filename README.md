@@ -1,5 +1,7 @@
 #INFO 247 Lab 03: Highcharts, jQuery, Dashboard
 
+Dashboard: http://people.ischool.berkeley.edu/~sonali.sharma/info247-lab-03-highcharts_dashboard/
+
 ##Instructions
 
 ###Setup
