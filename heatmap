@@ -1,0 +1,195 @@
+(function (Highcharts) {
+    var seriesTypes = Highcharts.seriesTypes,
+        each = Highcharts.each;
+    
+    seriesTypes.heatmap = Highcharts.extendClass(seriesTypes.map, {
+        translate: function () {
+            var series = this,
+                options = series.options,
+                dataMin = Number.MAX_VALUE,
+                dataMax = Number.MIN_VALUE,
+                opacity,
+                minOpacity = options.minOpacity,
+                path,
+                color;
+    
+            series.generatePoints();
+    
+            each(series.data, function (point) {
+                
+                point.path = [
+                        'M', point.col - 0.5, point.row - 0.5,
+                        'L', point.col + 0.5, point.row - 0.5,
+                        'L', point.col + 0.5, point.row + 0.5,
+                        'L', point.col - 0.5, point.row + 0.5,
+                        'Z'
+                    ];
+                
+                point.shapeType = 'path';
+                point.shapeArgs = {
+                    d: series.translatePath(point.path)
+                };
+                
+                if (typeof point.y === 'number') {
+                    if (point.y > dataMax) {
+                        dataMax = point.y;
+                    } else if (point.y < dataMin) {
+                        dataMin = point.y;
+                    }
+                }
+            });
+            
+            series.translateColors(dataMin, dataMax);
+        },
+        
+        getBox: function () {}
+            
+    });
+    
+}(Highcharts));
+
+Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+var col = 0;
+var curTime = new Date();
+curTime.setMilliseconds(0);
+curTime = curTime.getTime();
+
+var initialTimeslots = timeslotOffset = 50;
+var NUM_BUCKETS = 10;
+var REFRESH_RATE = 2000;
+var latencyHeatmapChartRef = null;
+
+
+
+
+function generateTimeSlot(col, datetime) {
+    var res = [];
+    for (var i=0; i<NUM_BUCKETS; i++) {    
+        var value = Math.floor(Math.random()*300);
+        res.push({x:datetime, y:value, col:col, row:i});
+    }
+    return res;
+}
+
+function generateData(numTimeSlots) {
+    var res = [];
+    for (; col<numTimeSlots; col++) {
+        var timeslot = curTime - (timeslotOffset - col) * REFRESH_RATE;
+        res = res.concat(generateTimeSlot(col, timeslot));
+    }
+    
+    res.marker = {
+        lineColor: null,
+        states: {
+            hover: {
+                fillColor: 'red',
+                lineWidth: 2
+            }
+        }
+    };
+    return res;
+}
+
+var data = generateData(initialTimeslots);
+var latencyHeatmapChart = new Highcharts.Chart({
+
+    chart: {
+        renderTo: 'latencyHeatmap',
+        type: 'heatmap',
+        animation: Highcharts.svg,
+        /*events: {
+            load: redrawAllCharts
+        }*/
+
+    },
+    
+    plotOptions: {
+        series: {
+            turboThreshold:0
+        }
+    },
+    
+    title: {
+        text: 'Highcharts heat map study'
+    },
+
+    xAxis: {
+        min: 0, 
+        max: 10,
+        //type: 'datetime',
+        /*formatter: function() {
+            //return this.value.datetime;
+            return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value.x);
+        }*/
+        labels: {
+            format: '{value.x}'
+        }
+    },
+    
+    yAxis: {
+        //categories: ['128-255', '256-511', '512-1023'],
+        min: -0.50,
+        max: NUM_BUCKETS-0.5,
+        minPadding: 0,
+        maxPadding: 0,
+        startOnTick: false,
+        endOnTick: false,
+        title: {
+            text: "latency"
+        },
+        labels: {
+            enabled: false
+        }
+    },
+
+    tooltip: { 
+        formatter: function () {
+            return this.y;
+        }
+    },
+    
+    legend: {
+        valueDecimals: 0,
+        enabled: false
+    },
+
+    series: [{
+        borderWidth: 0,
+        data: data,
+        
+        // Color ranges for the legend
+        valueRanges: [{
+            from: 0,
+            to: 99,
+            color: 'white'
+        }, {
+            from: 100,
+            to: 149,
+            color: '#9fc5e6'
+        }, {
+            from: 150,
+            to: 199,
+            color: '#2997e6'
+        }, {
+            from: 200,
+            color: '#1686e5'
+        }],
+        
+        
+    }]
+
+});
+
+console.log(data);
+
+
+// set up the updating of the chart each second
+var latencySeries = latencyHeatmapChart.series[0];
+
+
+

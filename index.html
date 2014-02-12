@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Company Sales Report</title>
+    <link rel="stylesheet" href="_css/main.css">
+    <script src="_js/jquery-1.11.0.min.js"></script>
+    <script src="_js/highcharts.js"></script>
+    <!--Add the script location in the header -->
+    <script src="_js/main.js"></script>
+
+</head>
+<body>
+  <script>
+  /*All script has been moved to main.js file.  */
+  </script>
+
+ <!--Define the main wrapper class -->
+  <div id="wrapper">
+
+    <!--Define div for header, properties defined in css file -->
+    <div id ="header">
+        <h2>Annual Sales Report (2014)</h2>
+    </div>
+
+    <!--Define div for filter, properties defined in css file -->
+    <div id ="filters">
+        <!--This is a predefined list, this can also be generated dynamically using jquery -->
+        <ul id="list-usePref">
+            <li data-usePref="All" class="active">All</li>
+            <li data-usePref="Quebec">Quebec</li>
+            <li data-usePref="Toronto">Toronto</li>
+            <li data-usePref="Ontario">Ontario</li>    
+            <li data-usePref="Alberta">Alberta</li>                   
+        </ul>
+    </div>
+
+    <!--Define div for line chart, properties defined in css file -->
+    <div id="line-chart">
+    </div>
+
+    <!--Define div for bar chart, properties defined in css file -->
+    <div id="bar-chart">
+    </div>
+
+    <!--Define div for pir chart, properties defined in css file -->
+    <div id="pie-chart">
+    </div>
+
+  </div>
+
+</body>
+</html>
